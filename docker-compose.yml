@@ -1,0 +1,49 @@
+networks:
+  app-net:
+    driver: bridge
+
+volumes:
+  faiss-data:
+  repo-cache:
+
+services:
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    container_name: bugfix-backend
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - ENVIRONMENT=production
+      - FAISS_INDEX_PATH=/data/faiss_index
+    volumes:
+      - faiss-data:/data/faiss_index
+      - repo-cache:/data/repositories
+    ports:
+      - "8000:8000"
+    networks:
+      - app-net
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    container_name: bugfix-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:80"
+    networks:
+      - app-net
+    depends_on:
+      - backend
+
+  redis:
+    image: redis:7-alpine
+    container_name: bugfix-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-net
