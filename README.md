@@ -1,203 +1,264 @@
-# 🐛 AI Bug Fixing Assistant
+<div align="center">
 
-> **RAG-powered code analysis that finds bugs static tools miss.**  
-> Combines FAISS vector retrieval with GPT-4o to detect security vulnerabilities, logic errors, and performance issues across any GitHub repository.
+# 🛡️ CodeGuard AI
+
+### Intelligent Code Security & Bug Detection Platform
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi)](https://fastapi.tiangolo.com)
 [![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python)](https://python.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react)](https://react.dev)
-[![OpenAI](https://img.shields.io/badge/GPT--4o-RAG-412991?style=flat-square&logo=openai)](https://openai.com)
+[![Gemini](https://img.shields.io/badge/Gemini-2.0_Flash-4285F4?style=flat-square&logo=google)](https://ai.google.dev)
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?style=flat-square&logo=docker)](https://docker.com)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+
+**AI-powered code analysis that finds bugs, vulnerabilities, and security issues  
+that traditional static analysis tools miss.**
+
+[Demo](#demo) · [Features](#features) · [Quick Start](#quick-start) · [Architecture](#architecture) · [API Docs](#api-reference)
+
+</div>
 
 ---
 
-## Features
+## 📌 Overview
 
-- **Dual-pass detection** — instant regex rules + deep LLM semantic analysis
-- **RAG pipeline** — retrieves similar code patterns for richer context before LLM inference
-- **10+ bug categories** — security, performance, logic, concurrency, type errors, and more
-- **Async repo analysis** — clones, chunks, embeds, and analyses large repos without blocking
-- **Structured reports** — risk scores, severity breakdowns, diff-style fix suggestions
-- **Conversational AI** — ask follow-up questions about any finding via chat interface
-- **Multi-language** — Python, JavaScript, TypeScript, Java, Go, Rust, C++, and more
+**CodeGuard AI** is a full-stack AI application that combines **Retrieval-Augmented Generation (RAG)** with **Google Gemini 2.0** to perform deep semantic code analysis. Unlike traditional linters, CodeGuard understands the *intent* of your code and detects complex bugs including logic errors, race conditions, and security vulnerabilities.
 
-## Architecture
+> Built as a production-grade portfolio project demonstrating RAG architecture, vector search, async APIs, and modern React development.
 
-```
-React SPA  ──HTTP──►  FastAPI  ──►  RepoAnalyzer  ──►  FileParser + Chunker
-                          │                                      │
-                          ▼                                      ▼
-                     BugDetector                        EmbeddingEngine (OpenAI)
-                    /           \                               │
-           StaticPattern    Semantic                     FAISS Retriever
-           Detector         Detector                            │
-                                \                               │
-                                 ──────►  RAGPipeline ◄─────────
-                                               │
-                                          GPT-4o LLM
-                                               │
-                                        ReportGenerator
-```
+---
 
-## Quick Start
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🔍 **RAG-Powered Analysis** | FAISS vector store + Gemini LLM for semantic bug detection |
+| 🔐 **Security Scanning** | Detects OWASP Top 10 vulnerabilities, SQL injection, XSS, hardcoded secrets |
+| ⚡ **Multi-Language Support** | Python, JavaScript, TypeScript, Java, Go, Rust, C++ |
+| 📊 **Risk Scoring** | Quantitative risk score (0–10) per repository |
+| 🤖 **AI Chat Interface** | Ask follow-up questions about any detected bug |
+| 🐙 **GitHub Integration** | Shallow-clone and analyse any public repository |
+| 📈 **Real-time Dashboard** | Live bug statistics and category breakdowns |
+| 🐳 **Docker Ready** | One-command deployment with Docker Compose |
+
+---
+
+## 🖥️ Demo
+
+### Dashboard
+![Dashboard showing real-time bug statistics and category breakdown]
+
+### Code Analysis
+![Analysis page showing detected bugs with severity levels]
+
+### AI Chat
+![AI chat interface explaining security vulnerabilities]
+
+---
+
+## 🚀 Quick Start
 
 ### Prerequisites
-
 - Python 3.12+
 - Node.js 20+
-- OpenAI API key
+- Google Gemini API key (free at [aistudio.google.com](https://aistudio.google.com/apikey))
 
-### 1. Clone & configure
-
+### 1. Clone the repository
 ```bash
-git clone https://github.com/your-username/ai-bug-fixing-assistant
-cd ai-bug-fixing-assistant
+git clone https://github.com/yourusername/codeguard-ai.git
+cd codeguard-ai
+```
+
+### 2. Configure environment
+```bash
 cp .env.example .env
-# Edit .env and add your OPENAI_API_KEY
+# Edit .env and add your GEMINI_API_KEY
 ```
 
-### 2. Backend
-
+### 3. Run with Docker (Recommended)
 ```bash
-# Create virtual environment
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+docker compose up --build
+```
 
-# Install dependencies
+### 4. Run locally
+```bash
+# Terminal 1 — Backend
 pip install -r requirements.txt
-
-# Start the API server
 python -m backend.main
-# → http://localhost:8000
-# → http://localhost:8000/docs  (Swagger UI, set DEBUG=true)
-```
 
-### 3. Frontend
-
-```bash
+# Terminal 2 — Frontend
 cd frontend
 npm install
 npm run dev
-# → http://localhost:3000
 ```
 
-### 4. Docker (recommended for production)
-
-```bash
-docker compose up --build
-# Backend  → http://localhost:8000
-# Frontend → http://localhost:3000
+### 5. Open the app
+```
+Frontend  →  http://localhost:3000
+API Docs  →  http://localhost:8000/docs
 ```
 
-## API Reference
+---
+
+## 🏗️ Architecture
+```
+┌─────────────────────────────────────────────────┐
+│              React Frontend (Vite)               │
+│     Dashboard · Analysis · AI Chat Interface     │
+└──────────────────────┬──────────────────────────┘
+                       │ REST API
+┌──────────────────────▼──────────────────────────┐
+│              FastAPI Backend                     │
+│   Routes → BugDetector → ReportGenerator        │
+└──────────────────────┬──────────────────────────┘
+                       │
+┌──────────────────────▼──────────────────────────┐
+│                 AI Engine                        │
+│                                                  │
+│  EmbeddingEngine → FAISS Retriever               │
+│         │                  │                     │
+│         └──── RAGPipeline ─┘                    │
+│                    │                             │
+│            Gemini 2.0 Flash                      │
+└─────────────────────────────────────────────────┘
+```
+
+### Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| **Frontend** | React 18, Vite 5, CSS Variables |
+| **Backend** | FastAPI 0.115, Pydantic v2, Uvicorn |
+| **AI/ML** | Google Gemini 2.0 Flash, FAISS |
+| **Vector DB** | FAISS (faiss-cpu) |
+| **Async** | asyncio, aiofiles |
+| **DevOps** | Docker, Docker Compose, Nginx |
+| **Testing** | pytest, pytest-asyncio |
+
+---
+
+## 📡 API Reference
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/v1/analyze/repo` | Submit GitHub repo for async analysis |
-| `GET`  | `/api/v1/analyze/{session_id}` | Poll analysis status |
-| `POST` | `/api/v1/analyze/snippet` | Synchronously analyse a code snippet |
-| `POST` | `/api/v1/chat` | Chat about analysis results |
-| `GET`  | `/health` | Health check |
+| `POST` | `/api/v1/analyze/code` | Analyse a code snippet (sync) |
+| `POST` | `/api/v1/analyze/repo` | Submit GitHub repo for analysis (async) |
+| `POST` | `/api/v1/analyze/upload` | Upload files for analysis |
+| `GET` | `/api/v1/analyze/status/{job_id}` | Poll job status |
+| `POST` | `/api/v1/analyze/chat` | Chat about analysis results |
+| `GET` | `/api/v1/reports` | List all reports |
+| `GET` | `/health` | Health check |
 
-### Example: Analyse a snippet
+Full interactive docs available at `/docs` when running in debug mode.
 
+---
+
+## 🔍 Detected Bug Categories
+
+| Category | Examples |
+|----------|---------|
+| 🔐 **Security** | SQL injection, XSS, hardcoded secrets, eval() usage |
+| 🧠 **Logic Errors** | Off-by-one, incorrect conditionals, dead code |
+| ⚠️ **Exception Handling** | Bare except, swallowed exceptions |
+| 🏃 **Performance** | N+1 queries, blocking I/O, memory leaks |
+| 🔄 **Race Conditions** | Unsynchronised shared state, deadlocks |
+| 🏷️ **Type Errors** | Type mismatches, null dereferences |
+
+---
+
+## ⚙️ Configuration
+
+All settings via `.env` file:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `GEMINI_API_KEY` | required | Google Gemini API key |
+| `LLM_MODEL` | `gemini-2.0-flash` | Gemini model to use |
+| `EMBEDDING_MODEL` | `models/embedding-001` | Embedding model |
+| `EMBEDDING_DIMENSION` | `768` | Vector dimension |
+| `CHUNK_SIZE` | `1000` | Code chunk size |
+| `TOP_K_RETRIEVAL` | `5` | RAG retrieval count |
+| `DEBUG` | `false` | Enable debug mode |
+
+---
+
+## 🧪 Running Tests
 ```bash
-curl -X POST http://localhost:8000/api/v1/analyze/snippet \
-  -H "Content-Type: application/json" \
-  -d '{
-    "code": "password = \"admin123\"\nresult = eval(user_input)",
-    "language": "python",
-    "focus_areas": ["security"]
-  }'
-```
-
-## Running Tests
-
-```bash
+# Run all tests
 pytest tests/ -v
-# With coverage report:
+
+# With coverage report
 pytest tests/ --cov --cov-report=html
 open coverage_html/index.html
 ```
 
-## Project Structure
+---
 
+## 📁 Project Structure
 ```
-ai-bug-fixing-assistant/
+codeguard-ai/
 ├── backend/
-│   ├── main.py              # FastAPI app factory, middleware, lifespan
-│   ├── config.py            # Pydantic-settings configuration
 │   ├── api/
 │   │   ├── routes.py        # All REST endpoints
-│   │   └── schemas.py       # Pydantic request/response models
+│   │   └── schemas.py       # Pydantic models
 │   ├── services/
-│   │   ├── repo_analyzer.py # Git clone + file collection
-│   │   ├── bug_detector.py  # Dual-pass detection orchestrator
-│   │   └── report_generator.py  # Risk scoring + Markdown reports
-│   └── utils/
-│       ├── file_parser.py   # Language detection + metadata extraction
-│       └── chunking.py      # Semantic + sliding-window code chunking
+│   │   ├── bug_detector.py  # Core detection logic
+│   │   ├── repo_analyzer.py # GitHub repo cloning
+│   │   └── report_generator.py
+│   ├── utils/
+│   │   ├── chunking.py      # Code chunking
+│   │   └── file_parser.py   # File parsing
+│   ├── config.py            # Settings management
+│   └── main.py              # FastAPI app
 ├── ai_engine/
-│   ├── embeddings.py        # OpenAI embedding API with retry + cache
-│   ├── retriever.py         # FAISS vector store (build/load/search)
-│   ├── rag_pipeline.py      # RAG loop: retrieve → augment → generate → parse
-│   └── prompts.py           # Version-controlled prompt templates
+│   ├── embeddings.py        # Gemini embeddings
+│   ├── retriever.py         # FAISS vector store
+│   ├── rag_pipeline.py      # RAG orchestration
+│   └── prompts.py           # LLM prompt templates
 ├── frontend/
 │   └── src/
 │       ├── pages/           # Dashboard, Analysis, Chat
-│       ├── components/      # Sidebar, shared UI
-│       └── services/api.js  # HTTP client with error handling
-├── tests/
-│   ├── test_bug_detector.py
-│   ├── test_repo_analyzer.py
-│   ├── test_report_generator.py
-│   └── test_api_routes.py
-├── docker/
-│   ├── Dockerfile.backend
-│   ├── Dockerfile.frontend
-│   └── nginx.conf
-├── docs/
-│   └── architecture.md
+│       ├── components/      # Sidebar
+│       └── services/api.js  # HTTP client
+├── tests/                   # pytest test suite
+├── docker/                  # Dockerfiles + Nginx
 ├── docker-compose.yml
 ├── requirements.txt
 └── .env.example
 ```
 
-## Configuration
+---
 
-All settings live in `.env` (see `.env.example`). Key options:
+## 🤝 Contributing
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `OPENAI_API_KEY` | required | OpenAI API key |
-| `GITHUB_TOKEN` | optional | For private repo access |
-| `LLM_MODEL` | `gpt-4o` | LLM model for semantic analysis |
-| `EMBEDDING_MODEL` | `text-embedding-3-small` | Embedding model |
-| `TOP_K_RESULTS` | `10` | FAISS retrieval k |
-| `CHUNK_SIZE` | `1000` | Characters per code chunk |
-| `DEBUG` | `false` | Enables Swagger UI + verbose logs |
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/your-feature`
+3. Commit changes: `git commit -m "feat: add your feature"`
+4. Push: `git push origin feat/your-feature`
+5. Open a Pull Request
 
-## Tech Stack
+---
 
-| Layer | Technology |
-|-------|-----------|
-| API | FastAPI 0.115, Pydantic v2, uvicorn |
-| AI | OpenAI GPT-4o, text-embedding-3-small |
-| Vector DB | FAISS (faiss-cpu) |
-| Async I/O | asyncio, aiofiles |
-| Logging | structlog (JSON) |
-| Rate limiting | slowapi |
-| Frontend | React 18, Vite 5 |
-| Containerisation | Docker, Docker Compose, Nginx |
-| Testing | pytest, pytest-asyncio, pytest-cov |
+## 📄 License
 
-## Contributing
+MIT License — see [LICENSE](LICENSE) for details.
 
-1. Fork the repo
-2. Create a feature branch: `git checkout -b feat/my-feature`
-3. Run tests: `pytest tests/ -v`
-4. Open a PR with a clear description
+---
 
-## License
+## 👤 Author
 
-MIT — see [LICENSE](LICENSE)
+**Deepa** — Built as an industry-level portfolio project  
+demonstrating full-stack AI/ML engineering skills.
+
+[![GitHub](https://img.shields.io/badge/GitHub-anurag-jpg-181717?style=flat-square&logo=github)](https://github.com/anurag-jpg)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=flat-square&logo=linkedin)](https://linkedin.com/in/anurag yadav)
+
+---
+
+<div align="center">
+
+⭐ **Star this repo if you found it useful!** ⭐
+
+*Built with ❤️ using FastAPI, React, FAISS, and Google Gemini*
+
+</div>

@@ -2,6 +2,7 @@ export default function Sidebar({ activePage, onNavigate, session }) {
   const navItems = [
     { id: "dashboard", icon: "⬡", label: "Dashboard" },
     { id: "analysis", icon: "⌕", label: "New Analysis" },
+    { id: "history", icon: "🕐", label: "History" },
     { id: "chat", icon: "⌘", label: "AI Chat", disabled: !session },
   ];
 
@@ -34,10 +35,10 @@ export default function Sidebar({ activePage, onNavigate, session }) {
         <div style={{ fontWeight: 600, color: "var(--text-1)", marginBottom: 4 }}>
           Powered by
         </div>
-        <div>GPT-4o · FAISS · FastAPI</div>
+        <div>Gemini · FAISS · FastAPI</div>
         {session && (
           <div style={{ marginTop: 8, color: "var(--accent)", fontSize: 11 }}>
-            Session: {session.session_id?.slice(0, 8)}…
+            Session: {session.report_id?.slice(0, 8)}…
           </div>
         )}
       </div>
